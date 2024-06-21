@@ -1,5 +1,5 @@
 """
-This is pure python implementation of interpolation search algorithm
+This is pure Python implementation of interpolation search algorithm
 """
 
 
@@ -15,7 +15,7 @@ def interpolation_search(sorted_collection, item):
     right = len(sorted_collection) - 1
 
     while left <= right:
-        # avoid devided by 0 during interpolation
+        # avoid divided by 0 during interpolation
         if sorted_collection[left] == sorted_collection[right]:
             if sorted_collection[left] == item:
                 return left
@@ -33,23 +33,20 @@ def interpolation_search(sorted_collection, item):
         current_item = sorted_collection[point]
         if current_item == item:
             return point
+        elif point < left:
+            right = left
+            left = point
+        elif point > right:
+            left = right
+            right = point
+        elif item < current_item:
+            right = point - 1
         else:
-            if point < left:
-                right = left
-                left = point
-            elif point > right:
-                left = right
-                right = point
-            else:
-                if item < current_item:
-                    right = point - 1
-                else:
-                    left = point + 1
+            left = point + 1
     return None
 
 
 def interpolation_search_by_recursion(sorted_collection, item, left, right):
-
     """Pure implementation of interpolation search algorithm in Python by recursion
     Be careful collection must be ascending sorted, otherwise result will be
     unpredictable
@@ -59,7 +56,7 @@ def interpolation_search_by_recursion(sorted_collection, item, left, right):
     :return: index of found item or None if item is not found
     """
 
-    # avoid devided by 0 during interpolation
+    # avoid divided by 0 during interpolation
     if sorted_collection[left] == sorted_collection[right]:
         if sorted_collection[left] == item:
             return left
@@ -80,15 +77,14 @@ def interpolation_search_by_recursion(sorted_collection, item, left, right):
         return interpolation_search_by_recursion(sorted_collection, item, point, left)
     elif point > right:
         return interpolation_search_by_recursion(sorted_collection, item, right, left)
+    elif sorted_collection[point] > item:
+        return interpolation_search_by_recursion(
+            sorted_collection, item, left, point - 1
+        )
     else:
-        if sorted_collection[point] > item:
-            return interpolation_search_by_recursion(
-                sorted_collection, item, left, point - 1
-            )
-        else:
-            return interpolation_search_by_recursion(
-                sorted_collection, item, point + 1, right
-            )
+        return interpolation_search_by_recursion(
+            sorted_collection, item, point + 1, right
+        )
 
 
 def __assert_sorted(collection):
@@ -101,7 +97,7 @@ def __assert_sorted(collection):
     True
     >>> __assert_sorted([10, -1, 5])
     Traceback (most recent call last):
-    ...
+        ...
     ValueError: Collection must be ascending sorted
     """
     if collection != sorted(collection):
@@ -113,7 +109,7 @@ if __name__ == "__main__":
     import sys
 
     """
-	user_input = input('Enter numbers separated by comma:\n').strip()
+        user_input = input('Enter numbers separated by comma:\n').strip()
     collection = [int(item) for item in user_input.split(',')]
     try:
         __assert_sorted(collection)
@@ -122,7 +118,7 @@ if __name__ == "__main__":
 
     target_input = input('Enter a single number to be found in the list:\n')
     target = int(target_input)
-	"""
+        """
 
     debug = 0
     if debug == 1:
@@ -135,6 +131,6 @@ if __name__ == "__main__":
 
     result = interpolation_search(collection, target)
     if result is not None:
-        print("{} found at positions: {}".format(target, result))
+        print(f"{target} found at positions: {result}")
     else:
         print("Not found")
